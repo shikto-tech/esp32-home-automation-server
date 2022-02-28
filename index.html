@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0;
+            padding-top: 20px;
+        }
+        .row{
+            display: flex;
+            width: 100%;
+            height: 50px;
+            background-color: cyan;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <span>Light #5</span>
+        <div style="width: 50px;"></div>
+        <button id="5"></button>
+    </div>
+    <div class="row">
+        <span>Light #18</span>
+        <div style="width: 50px;"></div>
+        <button id="18"></button>
+    </div>
+    <div class="row">
+        <span>Light #19</span>
+        <div style="width: 50px;"></div>
+        <button id="19"></button>
+    </div>
+
+    <script>
+        let address = "http://192.168.0.108:3000/"
+
+        function getOnStatus(id, callBack){
+            fetch(address + "get?id=" + id)
+            .then((t)=>{callBack(t.status == 200)})
+        }
+        function setOnStatus(id, status, callBack){
+            fetch(address + "set?id=" + id + "&on=" + status)
+            .then((t)=>{if(t.status == 200) callBack()})
+        }
+
+        function SetupButton(id){
+            let btn = document.getElementById(id)
+
+            updateButtonText(id)
+            
+            btn.onclick = ()=>{
+                if(btn.innerHTML == "ON"){
+                    btn.disabled = true;
+                    setOnStatus(id, 0, ()=>{
+                        updateButtonText(id)
+                    })
+                }
+                else if(btn.innerHTML == "OFF"){
+                    btn.disabled = true;
+                    setOnStatus(id, 1, ()=>{
+                        updateButtonText(id)
+                    })
+                }
+            }
+        }
+
+        function updateButtonText(id){
+            let btn = document.getElementById(id)
+            getOnStatus(id, (isOn)=>{
+                btn.disabled = false;
+                if(isOn){
+                    btn.innerHTML = "ON"
+                }else{
+                    btn.innerHTML = "OFF"
+                }
+            })
+        }
+
+
+        SetupButton(5)
+        SetupButton(18)
+        SetupButton(19)
+    </script>
+</body>
+</html>
