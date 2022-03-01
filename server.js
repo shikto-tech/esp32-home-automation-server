@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require("cors")
-const port = 3010
+const port = 3000
 
 const JSONdb = require('simple-json-db');
 const db = new JSONdb('./database.json');
@@ -26,8 +26,6 @@ app.get('/get', (req, res) => {
     if(id == undefined || id == "") res.send("")
     let db_out = db.get(id)
     if(db_out == undefined)db_out = default_out
-    if(db_out == 0) res.status(400);
-    if(db_out == 1) res.status(200);
     res.send(db_out)
 })
 app.get('/toggle', (req, res) => {
